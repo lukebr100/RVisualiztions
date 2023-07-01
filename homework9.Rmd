@@ -1,0 +1,104 @@
+---
+title: "homework 9"
+author: "Luke Bennett"
+date: "12/9/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Problem 1 a)
+```{r}
+x = seq(1, 100)
+set.seed(1)
+y = 1 + 2 * x + rnorm(100, mean = 0, sd = 6) 
+m <- lm(y ~ x)
+summary_m <- summary(m)
+beta0 <- summary_m$coefficients[1]
+beta1 <- summary_m$coefficients[2]
+library(ggplot2)
+ggplot() + geom_point(mapping = aes(x = x, y = y)) + 
+           geom_abline(slope = beta1, intercept = beta0)
+
+```
+
+# Problem 1 b)
+
+\underline{Step 1} Model $$Y_i = 1 + \beta_1 * x_i + \epsilon_i, \text{where } \epsilon_i \sim N[0, 6^2]$$
+
+\underline{Step 2} Hypotheses $$H_0: \beta_1 = 2$$
+$$H_a: \beta_1 \neq 2$$
+
+\underline{Step 3} State test statistic
+
+Two-sided significance test
+
+\underline{Step 4} Evaluate test stat
+```{r}
+df <- 99
+c <- qt(0.05 / 2, df) #critical value
+x_bar <- mean(x)
+s_xx <- sum((x - x_bar)^2)
+t <- (m$coefficients[2] - 2) / (5.416 * sqrt(1/s_xx))
+```
+
+\underline{Step 5} State Significance level $$\alpha = 0.05$$
+
+\underline{Step 6} p-value under $H_0$
+```{r}
+p <- 2 * (1 - pt(abs(t), df))
+```
+Thus, $p = 0.866$
+
+\underline{Step 7} Decision
+
+Since $p = 0.886 > 0.05 = \alpha$ we accept the null hypothesis. So, $\beta_1 = 2$.
+
+# Problem 1 c)
+
+```{r}
+beta0 <- 1:100
+beta1 <- 1:100
+m <- 1:100
+for(i in m){
+  set.seed(i)
+  y = 1 + 2 * x + rnorm(100, mean = 0, sd = 6)
+  l <- lm(y ~ x)
+  summary_l <- summary(l)
+  beta0[i] <- summary_l$coefficients[1]
+  beta1[i] <- summary_l$coefficients[2]
+}
+df <- data.frame(beta0, beta1)
+cor(df$beta0, df$beta1)
+```
+Correlation between beta0 hat and beta1 hat is -0.89, so they are inversely related.  
+# Problem 2
+```{r}
+price <- c(300000, 250000, 400000, 550000, 317000, 389000, 425000, 289000, 389000)
+bedrs <- c(3, 3, 4, 5, 4, 3, 6, 3, 4)
+homes <- data.frame(bedrs, price)
+
+m <- lm(price ~ bedrs, data = homes)
+sum_m <- summary(m)
+beta0 <- m$coefficients[1]
+beta1 <- m$coefficients[2]
+beta0 <- as.numeric(beta0)
+beta1 <- as.numeric(beta1)
+ggplot(homes) + geom_point(mapping = aes(x = bedrs, y = price)) + 
+  geom_abline(slope = beta1, intercept = beta0)
+
+predict_m <- predict(m, list(bedrs = 2:8), data = homes, interval = "confidence")
+row.names(predict_m) <- 2:8
+```
+
+# Problem 3
+```{r}
+library(UsingR)
+data(deflection)
+m <- lm(Deflection ~ Load, data = deflection)
+plot(m)
+ggplot(data = deflection) + geom_point(mapping = aes(y = Deflection, x = Load)) +
+  geom_abline(mapping = aes(slope = m$coefficients[2], intercept = m$coefficients[1]))
+confint(m)
+```

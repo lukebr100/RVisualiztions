@@ -1,0 +1,36 @@
+---
+title: "Homework 0"
+author: "Luke Bennett"
+date: "8/29/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center")
+```
+
+# Problem 1 
+The minimum is 2ft, max is 120 ft, mean 42.98 ft.
+```{r}
+#this is a code chunk, only code goes here. this is a comment will not be seen as code
+
+data(cars)
+?cars
+summary(cars$dist)
+```
+
+# Problem 2
+The mean is 15.4 mph
+```{r}
+mean(cars$speed)
+```
+
+\newpage
+# Problem 3
+This is a histogram of distance variable
+```{r, out.width="60%", out.height="80%"}
+hist(cars$dist,
+     main= "Histogram of distance",
+     xlab = "Distance"
+     )
+```

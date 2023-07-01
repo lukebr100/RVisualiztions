@@ -1,0 +1,65 @@
+---
+title: "Homework 7"
+author: "Luke Bennett"
+date: "11/10/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Problem 1
+```{r}
+pnorm(170, mean = 180, sd = 25/sqrt(9))
+```
+Probability that the mean weight of 9 people is less than 170 lbs is 0.115
+```{r}
+pnorm(170, mean = 180, sd = 25)
+```
+Probability that a randomly selected indivudual has wt < 170 is 0.345.
+
+# Problem 2 a)
+```{r}
+xbar <- 2 / 30
+z <- 1.960
+se <- sqrt(xbar * (1 - xbar) / 30)
+lwr <- xbar - z * se
+upr <- xbar + z * se
+ci95 <- c(lwr, upr)
+```
+# Problem 2 b)
+There is 95% confidence that the true mean is contained in the interval 
+ci95 = (-0.0226, 0.1559).
+# Problem 2 c)
+```{r}
+w1 <- 2 / 30
+w2 <- 10 / 61
+n1 <- 30
+n2 <- 61
+diff <- w1 - w2
+se = sqrt(w1 * (1 - w1) / n1 + w2 * (1 - w2) / n2)
+z <- 1.960
+lwrw <- diff - z * se
+uprw <- diff + z * se
+ci95w <- c(lwrw, uprw)
+```
+confidence interval is [-0.2261, 0.0316]
+# Problem 2 d
+Look at the intersection ci95 and ci95w.  This is [-0.0226, 0.0316] a small interval around 0.  The first confidence interval was more to the positive end, and the confidence interval of thd difference was more negative.  This suggests w1>w2. 
+
+# Problem 4
+```{r}
+library(UsingR)
+data("stud.recs")
+dat = stud.recs
+n = nrow(dat)
+xbar = mean(dat$sat.v)
+se = sd(dat$sat.v) / sqrt(n) 
+
+t = qt(1 - 0.05 / 2, df = 159) #df = n-1
+lwr = xbar - t*se
+upr = xbar + t*se
+ci95 = c(lwr,upr)
+ci95
+```
+Confidence interval 95% is [422, 470]

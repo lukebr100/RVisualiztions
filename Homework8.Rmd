@@ -1,0 +1,77 @@
+---
+title: "Homework 8"
+author: "Luke Bennett"
+date: "12/3/2021"
+output: pdf_document
+package: \usepackage{amsmath}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Problem 1
+Is there a statistically significant difference between the male and female responses?
+
+
+\underline{Step 1}: $$X \sim \text{Bern}[\omega_x = 0.32]$$ 
+                    $$Y \sim \text{Bern}[\omega_y = 0.37]$$
+                    
+\underline{Step 2}: $$H_0: \omega_x - \omega_y = 0$$
+                    $$H_a: \omega_x - \omega_y \neq 0$$  
+                    
+\underline{Test Statistic}: $$z = \frac{\omega_x - \omega_y}{\sqrt{\frac{\omega_x(1 - \omega_x)}{n_x} + \frac{\omega_y(1 - \omega_y)}{n_y}}}$$
+
+\underline{Evaluate} $$z = \frac{0.32 - 0.37}{\sqrt{\frac{0.32(1-0.32)}{540} + \frac{0.37(1-0.37)}{560}}} = -1.75$$
+
+\underline{State} $\alpha = 0.05$
+
+\underline{Compute p-value under $H_0$} $$p = 2(1-\textbf{P}(z \geq |-1.75|)) = 0.08$$
+
+\underline{Decision} The test is not statistically significant because the test statistic falls within the acceptance region, and so we can conclude that males and females are equally as bother when someone is one their phone during an interaction. See graph.
+
+```{r}
+x <- seq(-5, 5, length = 1000)
+pdf <- dnorm(x, mean = 0, sd = 1)
+theoretical <- data.frame (x = x, pdf = pdf)
+z <- -1.75
+library(ggplot2)
+ggplot() + geom_polygon(data = theoretical, 
+                        mapping = aes (x = x, y = pdf), color = "grey", 
+                        fill = "grey") +
+          geom_area(data = subset(theoretical, x <= -1.96), 
+                    mapping = aes (x = x, y = pdf ), color = "red",
+                    fill = "red") +
+          geom_area(data = subset (theoretical, x >= 1.96),
+                    mapping = aes(x = x, y = pdf), color = "red", 
+                    fill = "red") +
+          labs(x = "z- statistic", y = "Probability density") +
+          geom_vline(xintercept = z) + ggtitle("Rejection Region Plot")
+
+```
+
+# Problem 2
+Determine if the variable Height is normally distributed. Use an appropriate test at
+$\alpha = 0.05$.
+$$H_0: \text{Height variable is normally distributed}$$
+$$H_a: \text{Height variable is not normally distributed}$$
+
+```{r}
+shapiro.test(trees$Height)
+```
+p value is $.40 \geq 0.05 = \alpha$ 
+
+Conclude that Height variable is Normally distributed.
+
+We can use Pearson Correlation with another normal RV
+
+```{r}
+cor.test(trees$Height, trees$Girth)
+```
+$p = 0.0028 < \alpha = 0.05$ so the correlation is significant. Reject null hypothesis.
+
+
+```{r}
+t.test(trees$Height, mu = 70, alternative = "g")
+```
+p value is close to zero smaller than $\alpha \Rightarrow \text{reject } H_0$
